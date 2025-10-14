@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage{amsmath}
+\numberwithin{equation}{section}
+\title{Fysikk}
+\author{Martin N. Håvardsen}
+\date{\today}
+\begin{document}
+\maketitle
+\section{$K=\frac 1 2 mv^2$}
+  \subsection{Grunnlag}
+  Vi kan bruke $F=ma$ og $a=\frac{dv}{dt}=\frac{dv}{ds}\cdot\frac{ds}{dt}=\frac{dv}{ds}\cdot v$,
+  \begin{align}
+    F&=m\left(\frac{dv}{dt}\right) \\
+    F&=m\cdot v\left(\frac{dv}{ds}\right)\\ 
+    E=\int F\cdot ds&=\int m\cdot v\left(\frac{dv}{ds}\right) ds \\
+    E&=m\cdot \int v\left(\frac{dv}{ds}\right)ds \\
+    %\text{let $u$ be } &\text{a function where } \frac{du}{dv}\cdot\frac{dv}{ds}=\frac{du}{ds} \notag\\
+    \text{let $u$ be } &\text{a function where } \frac{du}{dv}=v\notag\\
+    E&=m\int\left(\frac{du}{dv}\right)\left(\frac{dv}{ds}\right)ds \\
+    E&=m\int\left(\frac{du}{ds}\right)ds=m\left(u+C_1\right) \\
+    E&=m\int vdv=m\left(\frac 1 2 v^2+C_2\right) \\
+    E&=\frac 1 2 mv^2
+  \end{align}
+Merk at i likning \textbf{1.6} er $u=\displaystyle\int vdv$, og $C_1$ kan ignorerest. I likning \textbf{1.7} kan man ignorere $C_2$ siden $v=0\implies E=0$; $E$ har ingen konstantledd. 
+\section{Energi fra miljøet}
+  \begin{align}
+    \Delta K= K_f-K_i=W \\
+    \left.\Delta K= \text{}\right|
+  \end{align}
+
+\end{document}
