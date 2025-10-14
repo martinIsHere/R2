@@ -1,7 +1,0 @@
-{
-  "typeCheckingMode": "basic",
-  "reportMissingImports": false,
-  "reportUnknownMemberType": false,
-  "extraPaths": [],
-  "ignore": []
-}
