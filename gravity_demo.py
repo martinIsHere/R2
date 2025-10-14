@@ -28,7 +28,7 @@ k_meters_per_pixel = meters_per_screenwidth/SCREEN_WIDTH # Fra 3.2, k i (3.1), z
 k_increment = k_meters_per_pixel*0.05
 c_coordinate_at_origin = pygame.Vector2(0,0) # Fra 3.2, c i (3.1), koordinaten på planet vist på pixel (0,0)
 mouse_drag_start = pygame.Vector2(-1,-1) # point where mouse starts to drag
-global_mb2_down = False
+user_is_dragging = False
 object_size_pixels = 100
 mb1, mb2, mb3 = 0,0,0
 RUNNING = True
@@ -172,7 +172,7 @@ def generate_color(input_mass):
     pygame_color=pygame.Color(color_r, color_g, color_b)
     return pygame_color
 
-def handle_mb2():
+def handle_user_dragging():
     """
     håndterer draing osv. av rutenettet
     """
@@ -191,19 +191,30 @@ def handle_keydown(event):
     """
     Håndterer pygame.KEYDOWN
     """
-    global object_size_pixels
-    if pygame.key.get_pressed()[pygame.K_s]:
+    global object_size_pixels, user_is_dragging
+    pressed_keys = pygame.key.get_pressed()
+    if pressed_keys[pygame.K_s]:
         new_object_size_pixels=int(input("Ny størrelse på objekt(mengde pixel, uint): "))
         object_size_pixels=new_object_size_pixels
+    if pressed_keys[pygame.K_SPACE]:
+        mx, my = pygame.mouse.get_pos()
+        if 0<=mx<SCREEN_WIDTH and 0<=my<SCREEN_HEIGHT:
+            user_is_dragging=True
 def handle_keyup(event):
     """
     Håndterer pygame.KEYUP
     """
+    global object_size_pixels, user_is_dragging
+    pressed_keys = pygame.key.get_pressed()
+    if not pressed_keys[pygame.K_SPACE]:
+        user_is_dragging=False
+        mouse_drag_start.x=-1
+        mouse_drag_start.y=-1
 def handle_mousebuttondown(event):
     """
     Håndterer pygame.MOUSEBUTTONDOWN
     """
-    global global_mb2_down, mb1, mb2, mb3
+    global user_is_dragging, mb1, mb2, mb3
     mb1, mb2, mb3 = pygame.mouse.get_pressed(3)
     mx, my = pygame.mouse.get_pos()
     if mb1:
@@ -217,14 +228,14 @@ def handle_mousebuttondown(event):
         pygame_vec=pygame.Vector2(mx, my)
         add_object_with_vel(transform_window_to_plane(pygame_vec), generate_color(input_mass), input_mass, pygame.Vector2(input_velx, input_vely))
     if mb2:
-        global_mb2_down=True
+        user_is_dragging=True
 def handle_mousebuttonup(event):
     """
     Håndterer pygame.MOUSEBUTTONUP
     """
-    global mouse_drag_start, global_mb2_down, mb2
+    global mouse_drag_start, user_is_dragging, mb2
     if mb2:
-        global_mb2_down=False
+        user_is_dragging=False
         mouse_drag_start.x=-1
         mouse_drag_start.y=-1
 
@@ -273,7 +284,7 @@ def draw():
     pygame.display.flip()
 
 def handle_all_events():
-    global RUNNING, event_handler, global_mb2_down
+    global RUNNING, event_handler, user_is_dragging
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -284,8 +295,8 @@ def handle_all_events():
         if event_handler:
             event_handler(event)
 
-    if global_mb2_down:
-        handle_mb2()
+    if user_is_dragging:
+        handle_user_dragging()
 
 event_handlers={
     pygame.KEYDOWN:handle_keydown,
