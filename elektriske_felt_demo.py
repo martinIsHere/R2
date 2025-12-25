@@ -39,7 +39,7 @@ GAMMA = 7E-11
 COULOMB_CONSTANT_K_E = 8.99E9
 dt = 1 # seconds per tick
 dt *= 1E4
-electrical_field_sim_timestep = 2 # seconds per tick
+electrical_field_sim_timestep = 8 # seconds per tick
 electrical_field_sim_timestep *= 1E3
 PIXELS_BETWEEN_GRID_NODES = 80
 R_RELATIVE_TO_M = False # giddekje fiksa dette
@@ -50,12 +50,13 @@ class PhysObj:
     """
     Et fysisk objekt som påfører og påføres gravitasjonskraft
     """
-    m=1 # masse
-    q=1 # ladning
-    s=pygame.Vector2(0, 0) # posisjon
-    v=pygame.Vector2(0, 0) # hastighet
-    a=pygame.Vector2(0, 0) # akselerasjon
+    m = 1 # masse
+    q = 1 # ladning
+    s = pygame.Vector2(0, 0) # posisjon
+    v = pygame.Vector2(0, 0) # hastighet
+    a = pygame.Vector2(0, 0) # akselerasjon
     color=pygame.Color(255, 0, 0) # farge
+    immovable = False
     def __init__(self, m, q, s, v, a, c=pygame.Color(255, 0, 0)):
         self.m = m
         self.q = q
@@ -98,6 +99,8 @@ class PhysObj:
         """
         Bruker fysikkformler oppgitt i Ergo Fysikk 2
         """
+        if self.immovable:
+            return pygame.Vector2(0.0, 0.0)
         if includeGravity:
             G_sumForceVec = self.__calculateGravitationalForce(all_objects) # gravity
         else:
@@ -117,12 +120,16 @@ class PhysObj:
         """
         ...
         """
+        if self.immovable:
+            return
         self.v=self.v+self.a*time_passed
 
     def update_position(self, time_passed):
         """
         ...
         """
+        if self.immovable:
+            return
         self.s=self.s+self.v*time_passed
 
 #-#- variable definitions declarations
@@ -140,7 +147,7 @@ ALL_OBJECTS = [objA]
 
 #-#-function definitions
 #-#-sim functions definitions
-def add_object_with_vel(pos, color, mass, charge, vel):
+def add_object_with_vel(pos, color, mass, charge, vel, immovable=False):
     """
     Legger et objekt til i ALL_OBJECTS
     """
@@ -153,13 +160,14 @@ def add_object_with_vel(pos, color, mass, charge, vel):
         pygame.Vector2(0,0),
         color
     )
+    new_obj.immovable = immovable
     ALL_OBJECTS.append(new_obj)
 
-def add_object(pos, color, mass, charge):
+def add_object(pos, color, mass, charge, immovable=False):
     """
     Legger et objekt til i ALL_OBJECTS
     """
-    add_object_with_vel(pos, color, mass, charge, pygame.Vector2(0,0))
+    add_object_with_vel(pos, color, mass, charge, pygame.Vector2(0,0), immovable)
 
 def transform_window_to_plane(v):
     """
@@ -215,6 +223,23 @@ def handle_user_dragging():
     mouse_drag_start.x = mx
     mouse_drag_start.y = my
 
+def remove_closest_object(pos, objects):
+    if len(objects) == 0:
+        return objects
+    winPos = transform_window_to_plane(pos)
+    closestObj = objects[0]
+    indexClosestObj = 0
+    closestDist = -1
+    index = 0
+    for obj in objects:
+        currentDist = (obj.s - winPos).length()
+        if closestDist == -1 or currentDist < closestDist:
+            closestDist = currentDist
+            indexClosestObj = index
+        index+=1
+    objects.pop(indexClosestObj)
+    return objects
+
 def handle_input(event):
     """
     Kode for tastatur- og musrelaterte saker
@@ -237,6 +262,12 @@ def handle_keydown(event):
         mx, my = pygame.mouse.get_pos()
         input_mass=100000
         input_charge=-0.000000001
+        pygame_vec=pygame.Vector2(mx, my)
+        add_object(transform_window_to_plane(pygame_vec), generate_color(input_mass), input_mass, input_charge)
+    if pressed_keys[pygame.K_p]:
+        mx, my = pygame.mouse.get_pos()
+        input_mass=100000
+        input_charge=0.000000001
         pygame_vec=pygame.Vector2(mx, my)
         add_object(transform_window_to_plane(pygame_vec), generate_color(input_mass), input_mass, input_charge)
     if pressed_keys[pygame.K_1]:
@@ -263,8 +294,45 @@ def handle_keydown(event):
         input_charge=-4
         pygame_vec=pygame.Vector2(mx, my)
         add_object(transform_window_to_plane(pygame_vec), generate_color(input_mass), input_mass, input_charge)
+    if pressed_keys[pygame.K_5]:
+        mx, my = pygame.mouse.get_pos()
+        input_mass=1
+        input_charge=1
+        pygame_vec=pygame.Vector2(mx, my)
+        add_object(transform_window_to_plane(pygame_vec), generate_color(input_mass), input_mass, input_charge, True)
+    if pressed_keys[pygame.K_6]:
+        mx, my = pygame.mouse.get_pos()
+        input_mass=1
+        input_charge=5
+        pygame_vec=pygame.Vector2(mx, my)
+        add_object(transform_window_to_plane(pygame_vec), generate_color(input_mass), input_mass, input_charge, True)
+    if pressed_keys[pygame.K_7]:
+        mx, my = pygame.mouse.get_pos()
+        input_mass=1
+        input_charge=-1
+        pygame_vec=pygame.Vector2(mx, my)
+        add_object(transform_window_to_plane(pygame_vec), generate_color(input_mass), input_mass, input_charge, True)
+    if pressed_keys[pygame.K_7]:
+        mx, my = pygame.mouse.get_pos()
+        input_mass=1
+        input_charge=-5
+        pygame_vec=pygame.Vector2(mx, my)
+        add_object(transform_window_to_plane(pygame_vec), generate_color(input_mass), input_mass, input_charge, True)
+    if pressed_keys[pygame.K_q]:
+        mx, my = pygame.mouse.get_pos()
+        input_mass=1
+        input_charge=float(input("Charge: "))
+        pygame_vec=pygame.Vector2(mx, my)
+        add_object(transform_window_to_plane(pygame_vec), generate_color(input_mass), input_mass, input_charge, True)
     if pressed_keys[pygame.K_r]:
         ALL_OBJECTS.clear()
+    if pressed_keys[pygame.K_t]:
+        ALL_OBJECTS.pop()
+        print(len(ALL_OBJECTS))
+    if pressed_keys[pygame.K_y]:
+        mx, my = pygame.mouse.get_pos()
+        pos = pygame.Vector2(mx, my)
+        ALL_OBJECTS = remove_closest_object(pos, ALL_OBJECTS)
 
 def handle_keyup(event):
     """
@@ -430,7 +498,7 @@ def traceSampleChargePath(
         temp_start_pos_screen = transform_plane_to_window(temp_start_pos)
         temp_end_pos_screen = transform_plane_to_window(temp_end_pos)
         wierd_value = (int(255 * min(1, (particle.get_updated_acceleration(all_objects, False).length() if particle.a.length() == 0.0 else particle.a.length())/0.000005)) + 125)
-        wierd_value=int(wierd_value/2)
+        wierd_value=int(wierd_value)
         wierd_value=wierd_value % 255
         pygame.draw.line(
             window,
@@ -456,6 +524,7 @@ def traceSampleChargePath(
         # ENDWHILE
 
 def basicGridTrace(window, all_objects, timestep, gridPos, distBetween, gridWidth, gridHeight):
+    DEPTH = 4
     temp_node = pygame.Vector2(0.0, 0.0)
     const_amountOfNodes = gridWidth * gridHeight
     position_grid = pygame.Vector2(0.0, 0.0)
@@ -464,7 +533,7 @@ def basicGridTrace(window, all_objects, timestep, gridPos, distBetween, gridWidt
         position_grid.y = int(a / gridWidth)
         position_plane = (position_grid * distBetween) + gridPos
         traceSampleChargePath(window, position_plane, 0.0000000000001, all_objects,
-                timestep, timestep*20)
+                timestep, timestep*DEPTH)
         # draw_circle_in_plane(
         #         window, # pygame.screen ?
         #         pygame.Color(255,255,255), # pygame.Color
