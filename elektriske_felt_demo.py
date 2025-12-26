@@ -327,7 +327,8 @@ def handle_keydown(event):
     if pressed_keys[pygame.K_r]:
         ALL_OBJECTS.clear()
     if pressed_keys[pygame.K_t]:
-        ALL_OBJECTS.pop()
+        if len(ALL_OBJECTS) != 0:
+            ALL_OBJECTS.pop()
         print(len(ALL_OBJECTS))
     if pressed_keys[pygame.K_y]:
         mx, my = pygame.mouse.get_pos()
