@@ -1,0 +1,185 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\graphicspath{{./assets/}}
+
+\numberwithin{equation}{section}
+\title{R2}
+\author{xd}
+\date{\today}
+
+\begin{document}
+\maketitle
+\begin{center}
+\includegraphics[width=0.8\textwidth]{ARTSTYLE.png}\\
+\end{center}
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|l|l|l|}
+  \hline
+  \textbf{Oppgave} & \textbf{Svar} &\textbf{Tid} \\
+  \hline
+  \textcolor{blue}{2.35} & \textcolor{green}{rett} & 02:5 \\
+  \textcolor{blue}{2.35} & \textcolor{red}{feil} & 02:5 \\
+  \hline
+\end{tabular}
+  \caption{Matrise med oppgavetider}
+\end{table}
+\newpage
+\section{Grunngivning for integrasjon ved brøkoppspalting}
+\subsection{En enklere versjon av problemet}
+La $P(x)$ være en polynomfunksjon med grad $n\in\mathbb{N}$.
+La $Q_k(x)$ være en lineær funksjon for $k\in\mathbb{N}$.
+\begin{proof}
+  For alle $P(x)$ så eksisterer det $Q_1, \dots, Q_n$ med korrosponderande $A_1, \dots, A_n$ som, for alle $x\in\mathbb{R}$, oppfyller likningen:
+  \begin{align}
+    \frac 1 {P(x)}&=\sum_{i=1}^n \frac {A_i} {Q_i(x)} \\
+    \frac {P(x)} 1 &=\frac{1}{\sum_{i=1}^n \frac {A_i} {Q_i(x)}} \\
+    &=\sum_{i=1}^{n} \frac {A_i\cdot\left(\prod_{j=1}^{n}Q_j(x)\right)} 
+    {Q_i(x)\cdot\left(\prod_{j=1}^{n}Q_j(x)\right)} \\
+    &=\frac{\sum_{i=1}^{n} \frac {A_i\cdot\left(\prod_{j=1}^{n}Q_j(x)\right)}
+    {Q_i(x)}}{\left(\prod_{j=1}^{n}Q_j(x)\right)} \\
+    &=\frac{\frac {A_1\left(\prod_{j=1}^{n}Q_j(x)\right)} {Q_1(x)} + \cdots + \frac {A_n\left(\prod_{j=1}^{n}Q_j(x)\right)} {Q_n(x)}}{\left(\prod_{j=1}^{n}Q_j(x)\right)}
+  \end{align}
+  La $F(x)=\displaystyle\prod_{j=1}^{n}Q_j(x)$ og $F_k(x)=\displaystyle\frac{\prod_{j=1}^{n}Q_j(x)}{Q_k(x)}$ for $k\in\mathbb{N}$
+\begin{align}
+  \frac 1 {P(x)}&=\frac{A_1\cdot F_1(x) + \cdots + A_n\cdot F_n(x)}{F(x)} \\
+  \frac {1} {P(x)(A_1\cdot F_1(x) + \cdots + A_n\cdot F_n(x))}&=\frac{1}{F(x)} \\
+  \frac {1} {P(x)(A_1\cdot F_1(x) + \cdots + A_n\cdot F_n(x))}-\frac{1}{F(x)}&=0 \\
+  \frac {F(x)} {P(x)}&=A_1\cdot F_1(x) + \cdots + A_n\cdot F_n(x)
+  \label{eq:Fsub}
+\end{align}
+gg
+\end{proof}
+
+\section{Oppgaver}
+\subsection{Ex 15 s137}
+\begin{align}
+  F(x)&=\int_{\ln 2} x e^{-1}dt \\
+      &=\left(\int e^{-1}dt\right)\biggr\rvert_{\ln 2}^{x} \\
+      &=\left(\int e^{-1}dt\right)\biggr\rvert_{x} - \left(\int e^{-1}dt\right)\biggr\rvert_{\ln 2}
+\end{align}
+
+\subsection{Utforsk s148}
+\begin{align}
+  \int\frac 1 {ax+b}dx = \frac 1 a \ln | ax+b | + C \qquad \left(x\ne -\frac b a \right)
+\end{align}
+La $u(x)=ax+b \implies u'(x)=a$. La $f'(x)=\frac 1 {ax+b}=\frac 1 {u(x)}$. Da får vi at $f'(x)=\frac{d}{du}f(x)\cdot \frac{d}{dx}u(x)$.
+\begin{align}
+  &=\int\frac 1 {u(x)}dx  \qquad \left(u(x)\ne 0 \right) \\ 
+  &=\int f'(x)dx = f(x) + C
+\end{align}
+\begin{equation}
+  f(x)+C=\int \frac d {du}f(x)du=\int f'(x)\frac{1}{\frac d {dx}u(x)}du
+  \label{eq:sub}
+\end{equation}
+\begin{align}
+  f(x)+C&=\int \frac 1 {ax+b}dx \\
+  &=\int \frac 1 u  \cdot \frac 1 a du \\
+  &=\frac 1 a \int \frac 1 u du \\
+  &=\frac 1 a \ln |u| + C \\ 
+  &=\frac 1 a \ln |ax+b| + C
+\end{align}
+\section{$\displaystyle\int \frac {(\ln x)^2}{x}dx$}
+Gitt: $L=\int (\ln x)^2 dx$
+\begin{equation}
+  \int \frac {(\ln x)^2}{x}dx = \int 1\cdot \ln x\cdot\ln x\cdot\frac {1}{x}dx
+  \label{eq:intByParts}
+\end{equation}
+La $y=\frac 1 x\implies x=\frac 1 y$, da får vi at $y'=\frac {-1}{x^2}=\frac {-1}{(\frac{1}{y})^2}=-y^2$
+\begin{align}
+  \int 1\cdot \ln x\cdot\ln x\cdot\frac {1}{x}dx &= 
+  \int 1\cdot \ln \Bigl(\frac 1 y\Bigr)\cdot\ln \Bigl(\frac 1 y\Bigr)\cdot y \cdot \Bigl(-\frac 1 {y^2}\Bigr) dy \\
+  &=\int 1\cdot \ln \Bigl(\frac 1 y\Bigr)\cdot\ln \Bigl(\frac 1 y\Bigr)\cdot \Bigl(-\frac 1 {y}\Bigr) dy \\
+  \text{gjetning: }(\frac 1 3 (\ln x)^3)'&=(\ln x)^2\cdot\frac 1 x \\
+\end{align}
+\subsection{2.137 d)}
+\begin{equation}
+  \int \frac{3e^x}{e^x+1}dx
+  \label{eq:}
+\end{equation}
+La $u=e^x+1\implies x=\ln (u-1)\quad\land\quad \frac {du}{dx}=e^x$
+\begin{align}
+  \int \frac{3e^x}{e^x+1}dx &=
+  \int \frac{3e^x}{u}\cdot\frac{1}{e^x}du \\
+  &=
+  \int \frac{3}{u}du \\
+  &=
+  3\ln u +C \\
+  &=
+  3\ln (e^x+1) + C
+\end{align}
+\subsection{2.137 b)}
+\begin{align}
+  \int \frac {6x}{x^2-9}dx = \int \frac {6x}{(x+3)(x-3)}dx
+\end{align}
+sketchy logic: \newline
+$\exists A, B \in \mathbb{R}$
+\begin{align}
+  \frac{6x}{(x+3)(x-3)} &= \frac A {x+3} + \frac B {x-3} \hspace{2cm} x\ne\pm 3\\
+  6x &= A\cdot(x-3) + B\cdot(x+3)
+\end{align}
+??? La $x=3$
+\begin{align}
+  6(3) &= B\cdot(3+3) \\ 
+  18 &= B\cdot(6) \\ 
+  B &= \frac {18}{6} = 3
+\end{align}
+??? La $x=-3$
+\begin{align}
+  6(-3) &= A\cdot(-3-3) \\ 
+  -18 &= A\cdot(-6) \\ 
+  B &= \frac {-18}{-6} = 3
+\end{align}
+\begin{align}
+  \frac{6x}{(x+3)(x-3)} &= \frac 3 {x+3} + \frac 3 {x-3} \\ 
+  \int \frac{6x}{(x+3)(x-3)} dx &= \int \frac 3 {x+3} dx + \int \frac 3 {x-3} dx \\ 
+  &= 3\ln |x+3| + 3\ln |x-3| + C\\ 
+  &= 3\ln |x^2-9| + C
+\end{align}
+\subsection{2.137 b)}
+\begin{equation}
+  \int _0 ^1 (x+1)e^x dx
+  \label{eq:}
+\end{equation}
+Delvis; $\int f'g\; dx = fg - \int fg' dx$ \newline
+La $f'=e^x \quad \land \quad g=x+1 \implies g'=1 \quad \land \quad f=e^x$
+\begin{align}
+  \int _0 ^1 (x+1)e^x dx &= fg - \int fg' dx\\
+  &= e^x(x+1) - \int e^x(1) dx \\ 
+  &= e^x(x+1) - \int e^x dx
+\end{align}
+\subsection{2.119)}
+\begin{equation}
+  f(x):=\sqrt{r^2-x^2}
+  \label{eq:}
+\end{equation}
+\begin{align}
+  A&=2\pi\int _{-r}^r f(x)\sqrt{1+(f'(x))^2}dx \\
+  A&=2\pi\int _{-r}^r \sqrt{r^2-x^2}\sqrt{1+((\sqrt{r^2-x^2})')^2}dx \\
+  A&=2\pi\int _{-r}^r 
+  \sqrt{r^2-x^2}\sqrt{1+\left(\frac{-x}{\sqrt {r^2-x^2}}\right)^2}
+  dx \\
+  A&=2\pi\int _{-r}^r 
+  \sqrt{r^2-x^2+(r^2-x^2)\cdot\left(\frac{-x}{\sqrt {r^2-x^2}}\right)^2}
+  dx \\
+  A&=2\pi\int _{-r}^r 
+  \sqrt{r^2-x^2+\left(\frac{-x\cdot\sqrt{r^2-x^2}}{1\cdot\sqrt {r^2-x^2}}\right)^2}
+  dx \\
+  A&=2\pi\int _{-r}^r 
+  \sqrt{r^2-x^2+(-x)^2}
+  dx \\
+  A&=2\pi\int _{-r}^r 
+  \sqrt{r^2}
+  dx \\
+    A&=2\pi(r^2-(-r^2)) \\
+    A&=4\pi r^2
+\end{align}
+\subsection{2.121)}
+\subsection{2.127)}
+\end{document}
+\end{document}
