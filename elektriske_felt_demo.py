@@ -19,7 +19,7 @@ import pygame
 pygame.init() # type: ignore
 #-#-variable declarations
 SCREEN_WIDTH = 1480
-SCREEN_HEIGHT = 920
+SCREEN_HEIGHT = 750
 FPS_TARGET = 180
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Elektriske felt demo")
